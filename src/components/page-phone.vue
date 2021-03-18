@@ -1,11 +1,16 @@
 <template>
   <div class="page">
-    <nav class="system-bar"></nav>
-    <header class="header"></header>
+    <!-- 导航栏 -->
+    <wlp-nav-bar v-if="navBar" :statusBar="statusBar"></wlp-nav-bar>
     <draggable v-model="list" @end="onEnd">
       <transition-group class="drop-wrapper">
         <template v-for="item of list">
-          <div v-if="item.component === 'box'" :key="item.id">{{item.component}} - {{item.id}}</div>
+          <!-- 占位 -->
+          <div v-if="item.component === 'wrap'" :class="{'box': isBox, 'mouseHover': item.id === currentId}" :key="item.id" @click="handleBox(item)">
+            <div class="wrap" :style="'height:' + item.height + 'px'"></div>
+          </div>
+          <!-- 轮播图 -->
+          <wlp-swiper v-else-if="item.component === 'swiper'" :key="item.id" :options="item.options" @click="handleBox(item)"></wlp-swiper>
         </template>
       </transition-group>
    </draggable>
@@ -13,14 +18,34 @@
 </template>
 
 <script>
+import wlpNavBar from '@/components/wlp-nav-bar.vue';
+import wlpSwiper from '@/components/wlp-swiper.vue';
 import draggable from 'vuedraggable';
 
 export default {
   name: 'PagePhone',
   components: {
-    draggable
+    wlpSwiper,
+    wlpNavBar,
+    draggable,
   },
   props: {
+    isBox: {
+      type: Boolean,
+      default: false
+    },
+    statusBar: {
+      type: [Object, Boolean],
+      default () {
+          return false
+      }
+    },
+    navBar: {
+      type: [Object, Boolean],
+      default () {
+          return false
+      }
+    },
     options: {
       type: Array,
       default () {
@@ -29,29 +54,24 @@ export default {
     }
   },
   watch: {
-    options(val){
-      this.list = val;
+    options(newVal, oldVal){
+      this.list = newVal;
     }
   },
   data() {
     return {
-      list: [
-        {
-          id: 0,
-          component: 'box'
-        },
-        {
-          id: 1,
-          component: 'box'
-        },
-        {
-          id: 2,
-          component: 'box'
-        }
-      ]
+      list: [],
+      currentId: null,
     }
   },
+  created() {
+    this.list = this.options;
+  },
   methods: {
+    handleBox(event){
+      this.currentId = event.id;
+      this.$emit('click', event);
+    },
     onEnd() {
       this.$emit('change', this.list);
     },
@@ -59,20 +79,33 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import '@/style/_base.scss';
+  @import '@/style/base2021.scss';
 
-  .page{
-    @include flex(null, null, column);
-    width: 375px;
-    height: 667px;
-    overflow: hidden;
-    color: #333;
-    background-color: #ffffff;
+  .box{
+    position: relative;
+    &::after{
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 9999;
+      box-sizing: border-box;
+      content: '';
+      width: 100%;
+      height: 100%;
+      border: 1px dashed rgba($color: $color-primary, $alpha: 0.3);
+    }
+    &.mouseHover::after{
+      border-style: solid;
+      border-color: $color-error;
+    }
   }
 
-  .system-bar{
-    @include position-header();
+  .wrap{
+    width: 100%;
+    height: 10px;
   }
-
 </style>

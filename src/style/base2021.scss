@@ -1,17 +1,11 @@
-@import './mixin/flex.scss';                // flex(主轴,交叉轴,方向,换行,多轴线对齐) / flex-self(对齐,(布满||固定),顺序)
-// @import './mixin/text-overflow.scss';       // 文本格式化超出省略号  参数：宽度,单行/多行
-// @import './mixin/position-absolute.scss';   // 绝对定位  参数：上,右,下,左
-// @import './mixin/triangle.scss';            // 画三角形  参数：宽度,朝向,颜色
-@import './mixin/hr.scss';                  // 添加分割线  参数：位置,间隔
-
 /*每个页面公共css */
 
 /* 通用 */
-page {
+page, .page {
     min-height: 100%;
 	font-size: 14px;
 	line-height: 1;
-    color: $uni-text-color;
+    color: $text-color;
 	background-color: #f5f5f5;
 }
 
@@ -60,7 +54,7 @@ form {
 }
 
 button[type=primary],button[type=primary].button-hover{
-    background-color: $uni-color-primary;
+    background-color: $color-primary;
 }
 
 button[type=default]::after, button[type=primary]::after, button[type=warn]::after{
@@ -68,7 +62,7 @@ button[type=default]::after, button[type=primary]::after, button[type=warn]::aft
 }
 
 button[type=primary][disabled]{
-    background-color: rgba($color: $uni-color-primary, $alpha: 0.6);
+    background-color: rgba($color: $color-primary, $alpha: 0.6);
 }
 	
 .button{
@@ -82,7 +76,7 @@ button[type=primary][disabled]{
         line-height: 60px;
         font-size: 15px;
         border: 0;
-        background-color: $uni-bg-color;
+        background-color: $bg-color;
     }
     
     &--radius{
@@ -101,16 +95,16 @@ radio-group label, checkbox-group label{
 .radio{
     @include flex(null, center);
     height: 44px;
-    padding: 0 0 0 $uni-spacing-row-lg;
+    padding: 0 0 0 $spacing-row-lg;
     
     &__field{
         flex: none;
     }
     
     &__txt{
-        color: $uni-text-color;
+        color: $text-color;
         flex: auto;
-        padding: 0 $uni-spacing-row-base;
+        padding: 0 $spacing-row-base;
     }
 }
 
@@ -130,27 +124,27 @@ radio-group label, checkbox-group label{
 
 .color{
     &--success{
-        color: $uni-color-success;
+        color: $color-success;
     }
 
     &--warn{
-        color: $uni-color-warning;
+        color: $color-warning;
     }
 
     &--error{
-        color: $uni-color-error;
+        color: $color-error;
     }
 
     &--primary{
-        color: $uni-color-primary;
+        color: $color-primary;
     }
 
     &--grey{
-        color: $uni-text-color-grey;
+        color: $text-color-grey;
     }
 
     &--black{
-        color: $uni-text-color;
+        color: $text-color;
     }
 }
 
@@ -162,15 +156,15 @@ radio-group label, checkbox-group label{
 .hr-text{
 	@include flex(between, center);
     width: 100%;
-	color: $uni-text-color-grey;
+	color: $text-color-grey;
 	font-size: 11px;
-	padding: $uni-spacing-col-sm 0;
+	padding: $spacing-col-sm 0;
 	
 	&::before, &::after{
 		flex: auto;
 		@include hr();
 		position: initial;
-        margin: 0 $uni-spacing-row-sm;
+        margin: 0 $spacing-row-sm;
 	}
 }
 
@@ -194,16 +188,16 @@ rich-text.article__rich{
     
     .article__p{
         box-sizing: border-box;
-        font-size: $uni-font-size-paragraph;
+        font-size: $font-size-paragraph;
         line-height: 1.8;
         text-align: justify;
         color: #333;
-        padding: 0 $uni-spacing-row-lg;
-        margin-bottom: $uni-spacing-col-lg;
+        padding: 0 $spacing-row-lg;
+        margin-bottom: $spacing-col-lg;
         // letter-spacing: 1px;
 
         &:first-child{
-            padding-top: $uni-spacing-col-lg;
+            padding-top: $spacing-col-lg;
         }
 
         &:last-child{
@@ -216,7 +210,7 @@ rich-text.article__rich{
         display: block;
         max-width: 100% !important;
         height: initial !important;
-        margin-bottom: $uni-spacing-col-lg;
+        margin-bottom: $spacing-col-lg;
     }
     
     .article__full{
@@ -229,7 +223,7 @@ rich-text.article__rich{
 .dot{
     height: 16px;
     width: 16px;
-    background-color: $uni-color-error;
+    background-color: $color-error;
     border-radius: 50%;
     transform: scale(0.5) translate(-50%);
     

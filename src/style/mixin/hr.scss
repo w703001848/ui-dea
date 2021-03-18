@@ -8,32 +8,32 @@
         left: $start;
         right: $end;
         height: 1px;
-        background-color: $uni-border-color;
+        background-color: $border-color;
     } @else if ($direction == top){
         top: 0;
         left: $start;
         right: $end;
         height: 1px;
-        background-color: $uni-border-color;
+        background-color: $border-color;
     } @else if ($direction == right){
         top: $start;
         bottom: $end;
         right: 0;
         width: 1px;
-        background-color: $uni-border-color;
+        background-color: $border-color;
     } @else if ($direction == left){
         top: $start;
         bottom: $end;
         left: 0;
         width: 1px;
-        background-color: $uni-border-color;
+        background-color: $border-color;
     } @else if ($direction == border){
         box-sizing: border-box;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        border: 1px solid $uni-border-color;
+        border: 1px solid $border-color;
     }
 
     @media (max--moz-device-pixel-ratio: 1.49), (-webkit-max-device-pixel-ratio: 1.49), (max-device-pixel-ratio: 1.49), (max-resolution: 143dpi), (max-resolution: 1.49dppx) {
