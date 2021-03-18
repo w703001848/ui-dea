@@ -1,0 +1,94 @@
+@mixin position($top: null, $right: null, $bottom: null, $left: null, $zindex: null, $type: absolute) {
+  
+  @if $type == absolute or $type == fixed or $type == relative or $type == static or $type == sticky {
+    position: $type;
+  } @else {
+    @include _flexError($num, 'position-type');
+  }
+  @if $top != null {
+      @include position-top($top);
+  }
+  @if $right != null {
+      @include position-right($right);
+  }
+  @if $bottom != null {
+      @include position-bottom($bottom);
+  }
+  @if $left != null {
+      @include position-left($left);
+  }
+  @if $zindex != null {
+      @include position-zindex($zindex);
+  }
+}
+
+@mixin position-header($top: 0, $right: 0, $left: 0, $type: fixed) {
+  @include position($top, $right, null, $left, 100, $type);
+}
+
+@mixin position-footer($top: 0, $right: 0, $left: 0, $type: fixed) {
+  @include position($top, $right, null, $left, 100, $type);
+}
+
+// top
+@mixin position-top($num: 0){
+    @if $num == round($num) {
+        top: $num; 
+    } @else {
+        @include _flexError($num, 'position-top');
+    }
+}
+
+// right
+@mixin position-right($num: 0){
+    @if $num == round($num) {
+        right: $num; 
+    } @else {
+        @include _flexError($num, 'position-right');
+    }
+}
+
+// bottom
+@mixin position-bottom($num: 0){
+    @if $num == round($num) {
+        bottom: $num; 
+    } @else {
+        @include _flexError($num, 'position-bottom');
+    }
+}
+
+// left
+@mixin position-left($num: 0){
+    @if $num == round($num) {
+        left: $num; 
+    } @else {
+        @include _flexError($num, 'position-left');
+    }
+}
+
+// z-index
+@mixin position-zindex($num: 1){
+    @if $num == round($num) {
+        z-index: $num; 
+    } @else {
+        @include _flexError($num, 'position-zindex');
+    }
+}
+
+// flex错误提示
+@mixin _positionError($param, $type) {
+    position: relative;
+    background-color: #ff3c00 !important;
+    overflow: hidden;
+
+    &::after {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 0.5em;
+        color: #ff3c00 !important;
+        background-color: white !important;
+        font-size: 12px;
+        content: 'ErrorParam: #{$param} in #{$type}';
+    }
+}

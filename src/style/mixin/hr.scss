@@ -1,0 +1,68 @@
+// 添加分割线  参数：位置,间隔
+@mixin hr($direction: bottom, $start: 0, $end: 0){
+    content: '';
+    position: absolute;
+    z-index: 1;
+    @if ($direction == bottom) {
+        bottom: 0;
+        left: $start;
+        right: $end;
+        height: 1px;
+        background-color: $uni-border-color;
+    } @else if ($direction == top){
+        top: 0;
+        left: $start;
+        right: $end;
+        height: 1px;
+        background-color: $uni-border-color;
+    } @else if ($direction == right){
+        top: $start;
+        bottom: $end;
+        right: 0;
+        width: 1px;
+        background-color: $uni-border-color;
+    } @else if ($direction == left){
+        top: $start;
+        bottom: $end;
+        left: 0;
+        width: 1px;
+        background-color: $uni-border-color;
+    } @else if ($direction == border){
+        box-sizing: border-box;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid $uni-border-color;
+    }
+
+    @media (max--moz-device-pixel-ratio: 1.49), (-webkit-max-device-pixel-ratio: 1.49), (max-device-pixel-ratio: 1.49), (max-resolution: 143dpi), (max-resolution: 1.49dppx) {
+        /* 默认值，无需重置 */
+    }
+    @media (min--moz-device-pixel-ratio: 1.5) and (max--moz-device-pixel-ratio: 2.49), (-webkit-min-device-pixel-ratio: 1.5) and (-webkit-max-device-pixel-ratio: 2.49), (min-device-pixel-ratio: 1.5) and (max-device-pixel-ratio: 2.49), (min-resolution: 144dpi) and (max-resolution: 239dpi), (min-resolution: 1.5dppx) and (max-resolution: 2.49dppx) {
+        @if ($direction == left or $direction == right){
+            transform: scaleX(.5);
+        } @else if ($direction == top or $direction == bottom){
+            transform: scaleY(.5);
+        } @else if ($direction == border){
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            transform: scale(.5);
+        }
+    }
+    @media (min--moz-device-pixel-ratio: 2.5), (-webkit-min-device-pixel-ratio: 2.5), (min-device-pixel-ratio: 2.5), (min-resolution: 240dpi), (min-resolution: 2.5dppx) {        
+        @if ($direction == left or $direction == right){
+            transform: scaleX(.3333);
+        } @else if ($direction == top or $direction == bottom){
+            transform: scaleY(.3333);
+        } @else if ($direction == border){
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            transform: scale(.3333);
+        }
+    }
+}
