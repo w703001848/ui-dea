@@ -1,8 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <el-button size="mini" type="text">打开项目</el-button>
-      <el-button size="mini" type="text">保存项目</el-button>
+      <el-button size="mini" type="text" @click="save()">保存项目</el-button>
     </el-header>
     <el-container>
       <el-aside width="500px">
@@ -30,10 +29,11 @@
 <script>
 import wlpStatusBar from '@/components/wlp-status-bar.vue';
 import pagePhone from '@/components/page-phone.vue';
-import { statusBar } from '@/config/component.data.js';
-import tree from '@/config/tree.temp.js';
-import design from '@/config/design.temp.js';
+import { statusBar, treeDefault, designDefault } from '@/config/component.data.js';
+// import tree from '@/config/tree.temp.json';
+// import design from '@/config/design.temp.json';
 
+let tree, design;
 let id = 1;
 
 export default {
@@ -51,9 +51,12 @@ export default {
     }
   },
   created() {
+    console.log(JSON.parse(this.$storage.get('treeData')) || treeDefault)
+    tree = JSON.parse(this.$storage.get('treeData')) || treeDefault;
+    design = JSON.parse(this.$storage.get('designData')) || designDefault;
     id = tree.length + 1;
     this.treeData = tree.data;
-    this.optionsData = design[this.treeData[0].id];
+    this.optionsData = design[this.$store.state.designId] || designDefault[1];
   },
   methods: {
     append(data) {
@@ -63,8 +66,10 @@ export default {
       }
       data.children.push(newChild);
     },
-    edit(node, data) {
+    open(node, data) {
       console.log(node, data);
+      this.optionsData = design[data.id] || designDefault[1];
+      this.$store.commit('setDesignId', data.id);
     },
     remove(node, data) {
       const parent = node.parent;
@@ -77,7 +82,7 @@ export default {
         <span class="custom-tree-node">
           <span>{node.label}</span>
           <span>
-            <el-button size="mini" type="text" on-click={ () => this.edit(node, data) }>Edit</el-button>
+            <el-button size="mini" type="text" on-click={ () => this.open(node, data) }>Open</el-button>
             <el-button size="mini" type="text" on-click={ () => this.append(data) }>Append</el-button>
             <el-button size="mini" type="text" on-click={ () => this.remove(node, data) }>Delete</el-button>
           </span>
@@ -85,6 +90,10 @@ export default {
     },
     handleBox(e){
       console.log(e);
+    },
+    save(){
+      this.$storage.set('treeData', JSON.stringify(tree));
+      this.$storage.set('designData', JSON.stringify(design));
     }
   }
 }

@@ -39,7 +39,7 @@ export default {
 
 <style lang="scss">
   @import '@/style/_base.scss';
-  @import '@/style//page/grid.scss';
+  @import '@/style/page/grid.scss';
 
   .grid__content{
     justify-content: flex-start;

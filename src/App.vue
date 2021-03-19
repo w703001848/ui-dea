@@ -23,9 +23,9 @@ export default {
       activeIndex: 'Index',
     }
   },
-  created() {
-    this.activeIndex = 'Design';
-    this.$router.push({ name: 'Design'});
+  mounted() {
+    this.activeIndex = this.$router.history.current.name || 'Index';
+    this.$router.push({ name: this.activeIndex});
   },
   methods: {
     handleSelect(key, keyPath){

@@ -1,23 +1,45 @@
 <template>
-  <el-container>
-    <el-aside width="40vw">
+  <el-container :style="'height:' + height + 'px'">
+    <el-aside width="38vw" style="min-height: 300px;">
       <el-collapse v-model="activeNames">
-        <el-collapse-item title="项目" name="1">
-          <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
-          <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>
+        <el-collapse-item title="风格 STYLE" name="1">
+          <div class="grid">
+            <div class="grid__item styleType">
+              <div class="styleType__card">UIdea</div>
+              <span class="styleType__name">NEU</span>
+            </div>
+            <div class="grid__item styleType">
+              <div class="styleType__card">UIdea</div>
+              <span class="styleType__name">MD</span>
+            </div>
+            <div class="grid__item styleType">
+              <div class="styleType__card">UIdea</div>
+              <span class="styleType__name">FLAT</span>
+            </div>
+          </div>
         </el-collapse-item>
-        <el-collapse-item title="风格" name="2">
-          <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
-          <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>
+        <el-collapse-item title="配色 COLOR" name="2">
+          <div class="grid">
+            <div class="grid__item styleColor" v-for="(item, index) of colorData" :key="index">
+              <div class="styleColor__main" :style="'backgroundColor:' + item.bg"></div>
+              <div class="styleColor__bottom">
+                <span class="styleColor__helper" :style="'backgroundColor:' + item.primary"></span>
+                <span class="styleColor__helper" :style="'backgroundColor:' + item.text"></span>
+                <span class="styleColor__helper" :style="'backgroundColor:' + item.grey"></span>
+              </div>
+            </div>
+          </div>
         </el-collapse-item>
-        <el-collapse-item title="配色" name="3">
-          <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-          <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
-        </el-collapse-item>
-        <el-collapse-item title="组件" name="4">
-          <div>简化流程：设计简洁直观的操作流程；</div>
-          <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-          <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
+        <el-collapse-item title="组件 COMPONENT" name="3">
+          <div class="grid">
+            <div class="grid__item styleType" v-for="(item, index) of componentData" :key="index" @click="handleComponent(item)">
+              <div class="styleType__icon">
+                <wlp-icons type="listing-content" color="#ccc" size="32"></wlp-icons>
+              </div>
+              <span class="styleType__name">{{item.name}}</span>
+              <span class="styleType__txt">{{item.type}}</span>
+            </div>
+          </div>
         </el-collapse-item>
       </el-collapse>
     </el-aside>
@@ -32,7 +54,12 @@
       </el-main>
       
       <el-footer>
-        <el-checkbox v-model="isBox">是否显示组件框</el-checkbox>
+        <el-row :gutter="20">
+          <el-col :span="4"><el-button size="mini" type="text" @click="save()">保存页面</el-button></el-col>
+          <el-col :span="8"><el-checkbox v-model="isBox">是否显示组件框</el-checkbox></el-col>
+          
+          
+        </el-row>
       </el-footer>
     </el-container>
 
@@ -45,51 +72,64 @@
 
 <script>
 import wlpStatusBar from '@/components/wlp-status-bar.vue';
+import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
 import pagePhone from '@/components/page-phone.vue';
-import { statusBar } from '@/config/component.data.js'
+
+import { colorData, statusBar, componentData, designDefault } from '@/config/component.data.js';
+// import design from '@/config/design.temp.json';
+
+import { deepClone, writeFile } from '@/common/util.js';
+
+let id = 0;
+let design;
 
 export default {
   name: 'Index',
   components: {
     wlpStatusBar,
+    wlpIcons,
     pagePhone
   },
   data() {
     return {
+      height: 300,
       activeNames: ['1'],
-      activeIndex: '1',
+      colorData: colorData,
       statusBar: statusBar, // 头部状态栏
       navBar: false,        // 导航栏
       optionsData: [],
+      componentData: componentData,
       isBox: true,
     }
   },
   created() {
-    this.optionsData = [
-      {
-        id: 0,
-        component: 'wrap',
-        height: 20,
-      },
-      {
-        id: 1,
-        component: 'wrap'
-      },
-      {
-        id: 2,
-        component: 'wrap'
-      }
-    ];
+    this.id = 1;
+    this.height = document.documentElement.clientHeight - 64;
+    design = JSON.parse(this.$storage.get('designData')) || deepClone(designDefault);
+    this.optionsData = design[this.$store.state.designId];
+    console.log(design, this.$store.state.designId)
+    this.optionsData.map(item => {
+      if(item.id > this.id) this.id = item.id;
+    });
+    this.id ++;
   },
   methods: {
-    handleSelect(key, keyPath){
-      console.log(key, keyPath);
+    handleComponent(e){
+      this.optionsData.push({
+        ...e,
+        id: this.id,
+      })
+      this.id ++;
     },
     handleBox(e){
       console.log(e);
     },
     changePagePhone(e){
       this.optionsData = e;
+    },
+    save(){
+      design[this.$store.state.designId] = this.optionsData;
+      this.$storage.set('designData', JSON.stringify(design[this.$store.state.designId]));
     }
   }
 }
@@ -102,30 +142,94 @@ export default {
 
   .el-collapse{
     border: 0;
+
+    .el-collapse-item{
+      margin-bottom: $spacing-col-lg;
+    }
+
+    .el-collapse-item__header, .el-collapse-item__wrap{
+      color: $text-color;
+      background-color: #3f474d;
+      border-bottom: 0;
+    }
+
+    .el-collapse-item__header, .el-collapse-item__content{
+      box-sizing: border-box;
+      color: $text-color;
+      padding-left: $spacing-row-base;
+      padding-right: $spacing-row-base;
+    }
+
+    .grid{
+      @include flex(null, null, null, wrap);
+      margin: 0 - $spacing-col-base 0 - 1vw 0 0;
+
+      &__item{
+        width: 8vw;
+        height: 8vw;
+        line-height: 1.4;
+        margin: $spacing-col-base 1vw 0 0;
+        background-color: $bg-color;
+        border-radius: $border-radius-lg;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+      }
+
+      .styleType{
+        @include flex(center, center, column);
+
+        &__card{
+          @include flex(center, center);
+          width: 60%;
+          height: 40%;
+          margin-bottom: $spacing-col-base;
+          color: rgb(88, 255, 245);
+          background-color: rgb(103, 145, 167);
+        }
+
+        &__icon{
+          margin-bottom: $spacing-col-sm;
+        }
+
+        &__name{
+          font-size: 13px;
+        }
+
+        &__txt{
+          font-size: 11px;
+        }
+      }
+
+      .styleColor{
+        @include flex(null, null, column);
+        overflow: hidden;
+
+        &__main{
+          height: 100%;
+        }
+        &__bottom{
+          @include flex();
+        }
+        &__helper{
+          width: 100%;
+          height: 2.5vw;
+        }
+      }
+    }
   }
-  .el-collapse-item{
-    margin-bottom: $spacing-col-lg;
-  }
-  .el-collapse-item__header, .el-collapse-item__wrap{
-    color: $text-color;
-    background-color: #3f474d;
-    border-bottom: 0;
-  }
-  .el-collapse-item__header, .el-collapse-item__content{
-    box-sizing: border-box;
-    color: $text-color;
-    padding-left: $spacing-row-base;
-    padding-right: $spacing-row-base;
-  }
+
   .el-container{
     min-width: 415px;
   }
+
   .el-aside{
     min-width: 300px;
   }
+
   .el-main{
     @include flex(center, center);
   }
+
   .app{
     position: relative;
     width: 375px;

@@ -6,11 +6,11 @@
       <transition-group class="drop-wrapper">
         <template v-for="item of list">
           <!-- 占位 -->
-          <div v-if="item.component === 'wrap'" :class="{'box': isBox, 'mouseHover': item.id === currentId}" :key="item.id" @click="handleBox(item)">
+          <div v-if="item.type === 'wrap'" :class="{'box': isBox, 'mouseHover': item.id === currentId}" :key="item.id" @click="handleBox(item)">
             <div class="wrap" :style="'height:' + item.height + 'px'"></div>
           </div>
           <!-- 轮播图 -->
-          <div v-else-if="item.component === 'swiper'" :class="{'box': isBox, 'mouseHover': item.id === currentId}" :key="item.id" @click="handleBox(item)">
+          <div v-else-if="item.type === 'swiper'" :class="{'box': isBox, 'mouseHover': item.id === currentId}" :key="item.id" @click="handleBox(item)">
             <wlp-swiper :key="item.id" :options="item.options" @click="handleBox(item)"></wlp-swiper>
           </div>
         </template>
