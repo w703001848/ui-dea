@@ -1,22 +1,39 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import index from '../views/index.vue'
 
 Vue.use(VueRouter)
+
+const originalPush = VueRouter.prototype.push;
+
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err);
+}
 
 const routes = [
   {
     path: '/',
-    name: 'index',
-    component: index
+    name: 'Index',
+    component: () => import('../views/index.vue')
+  },
+  {
+    path: '/design',
+    name: 'Design',
+    component: () => import('../views/design.vue')
+  },
+  {
+    path: '/icons',
+    name: 'Icons',
+    component: () => import('../views/icons.vue')
+  },
+  {
+    path: '/images',
+    name: 'Images',
+    component: () => import('../views/images.vue')
   },
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import('../views/about.vue')
   }
 ]
 

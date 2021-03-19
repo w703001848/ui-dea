@@ -10,7 +10,9 @@
             <div class="wrap" :style="'height:' + item.height + 'px'"></div>
           </div>
           <!-- 轮播图 -->
-          <wlp-swiper v-else-if="item.component === 'swiper'" :key="item.id" :options="item.options" @click="handleBox(item)"></wlp-swiper>
+          <div v-else-if="item.component === 'swiper'" :class="{'box': isBox, 'mouseHover': item.id === currentId}" :key="item.id" @click="handleBox(item)">
+            <wlp-swiper :key="item.id" :options="item.options" @click="handleBox(item)"></wlp-swiper>
+          </div>
         </template>
       </transition-group>
    </draggable>
@@ -81,6 +83,7 @@ export default {
 
 <style lang="scss">
   @import '@/style/_base.scss';
+  @import '@/style/core/_setting-phone.scss';
   @import '@/style/base2021.scss';
 
   .box{

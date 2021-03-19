@@ -16,7 +16,7 @@
 
 
 <script>
-import wlpIcons from '@/components/wlp-icons.vue';
+import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
 export default {
   components: {
     wlpIcons

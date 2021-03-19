@@ -3,9 +3,11 @@
     <header class="body__head head">
         <div class="head__logo">我的工作台</div>
         <el-menu background-color="#3e464c" text-color="#fff" active-text-color="#ffd04b" :default-active="activeIndex" mode="horizontal" @select="handleSelect">
-          <el-menu-item index="1">设计</el-menu-item>
-          <el-menu-item index="2">设计2</el-menu-item>
-          <el-menu-item index="3">设计3</el-menu-item>
+          <el-menu-item index="Index" :router="true">项目</el-menu-item>
+          <el-menu-item index="Design" :router="true">设计</el-menu-item>
+          <el-menu-item index="Icons" :router="true">图标库</el-menu-item>
+          <el-menu-item index="Images" :router="true">图片库</el-menu-item>
+          <el-menu-item index="About" :router="true">更多</el-menu-item>
         </el-menu>
     </header>
     <div class="body__content">
@@ -18,12 +20,17 @@
 export default {
   data() {
     return {
-      activeIndex: '1',
+      activeIndex: 'Index',
     }
+  },
+  created() {
+    this.activeIndex = 'Design';
+    this.$router.push({ name: 'Design'});
   },
   methods: {
     handleSelect(key, keyPath){
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
+      this.$router.push({ name: key });
     }
   }
 }
@@ -42,7 +49,7 @@ export default {
 
   .body{
     height: 100%;
-    color: $text-color-inverse;
+    color: $text-color;
 
     &__head{
       box-sizing: border-box;
@@ -70,7 +77,7 @@ export default {
     padding: $spacing-col-sm $spacing-row-base;
 
     &__logo{
-      color: $text-color-inverse;
+      color: $text-color;
       font-size: 24px;
       text-align: center;
       width: 200px;
