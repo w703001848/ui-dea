@@ -78,10 +78,7 @@ import pagePhone from '@/components/page-phone.vue';
 import { colorData, statusBar, componentData, designDefault } from '@/config/component.data.js';
 // import design from '@/config/design.temp.json';
 
-import { deepClone, writeFile } from '@/common/util.js';
-
-let id = 0;
-let design;
+import { deepClone } from '@/common/util.js';
 
 export default {
   name: 'Index',
@@ -105,21 +102,21 @@ export default {
   created() {
     this.id = 1;
     this.height = document.documentElement.clientHeight - 64;
-    design = JSON.parse(this.$storage.get('designData')) || deepClone(designDefault);
-    this.optionsData = design[this.$store.state.designId];
-    console.log(design, this.$store.state.designId)
+    this.design = JSON.parse(this.$storage.get('designData')) || deepClone(designDefault);
+    console.log(this.design, this.$store.state.designId)
+    this.optionsData = this.design[this.$store.state.designId];
     this.optionsData.map(item => {
       if(item.id > this.id) this.id = item.id;
     });
-    this.id ++;
+    console.log(this.optionsData, this.id)
   },
   methods: {
     handleComponent(e){
+      this.id ++;
       this.optionsData.push({
         ...e,
         id: this.id,
       })
-      this.id ++;
     },
     handleBox(e){
       console.log(e);
@@ -128,8 +125,8 @@ export default {
       this.optionsData = e;
     },
     save(){
-      design[this.$store.state.designId] = this.optionsData;
-      this.$storage.set('designData', JSON.stringify(design[this.$store.state.designId]));
+      this.design[this.$store.state.designId] = this.optionsData;
+      this.$storage.set('designData', JSON.stringify(this.design));
     }
   }
 }

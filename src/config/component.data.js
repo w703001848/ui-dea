@@ -175,16 +175,13 @@ module.exports = {
       type: 'card',
     },
   ],
-  treeDefault: {
-    "data": [
-      {
-        "id": 1,
-        "label": "首页",
-        "children": []
-      },
-    ],
-    "length": 1
-  },
+  treeDefault: [
+    {
+      "id": 1,
+      "label": "页1",
+      "children": []
+    },
+  ],
   designDefault: {
     "1": [],
   }
