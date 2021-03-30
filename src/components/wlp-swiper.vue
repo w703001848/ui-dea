@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper" :class="options.type">1</div>
+  <div class="swiper" :class="options.type" :style="{'backgroundColor': themeColor.bg}">1222</div>
 </template>
 
 

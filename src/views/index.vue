@@ -41,9 +41,7 @@
 <script>
 import wlpStatusBar from '@/components/wlp-status-bar.vue';
 import pagePhone from '@/components/page-phone.vue';
-import { statusBar, treeDefault, designDefault } from '@/config/component.data.js';
-// import tree from '@/config/tree.temp.json';
-// import design from '@/config/design.temp.json';
+import { statusBar, treeDefault, designDefault } from '@/config/constData.config.js';
 
 import { deepClone } from '@/common/util.js';
 
@@ -127,7 +125,7 @@ export default {
         this.id = 1;
         this.treePage = this.treeData[0];
       }
-      console.log(this.treeData, this.design, this.id, this.optionsData);
+      // console.log(this.treeData, this.design, this.id, this.optionsData);
     },
     newProject(){
       if(confirm("警告：未保存前可刷新页面获取旧数据！")){
