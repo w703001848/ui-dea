@@ -78,6 +78,7 @@ import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
 import pagePhone from '@/components/page-phone.vue';
 
 import { themeType, themeColor, statusBar, componentData, designDefault } from '@/config/constData.config.js';
+import { swiperTemp } from '@/config/components.temp.js';
 
 import { deepClone } from '@/common/util.js';
 
@@ -135,6 +136,10 @@ export default {
       this.$store.commit('setThemeColor', this.themeColor);
     },
     handleComponent(e){
+      if(e.type === 'swiper'){
+        e.banners = swiperTemp;
+      }
+      console.log(e)
       this.id ++;
       this.optionsData.push({
         ...e,

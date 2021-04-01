@@ -201,6 +201,17 @@ module.exports = {
     {
       name: '轮播图',
       type: 'swiper',
+      height: 150,
+      width: undefined,
+      padding: '10px 15px',
+      setting: {
+        speed: 300,
+        autoplay: {
+          delay: 3000,
+        },
+        loop: true,
+      },
+      banners: []
     },
     {
       name: '间隔',
