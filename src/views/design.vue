@@ -306,6 +306,7 @@
     height: 667px;
     color: #333;
     background-color: #ffffff;
+    box-shadow: 0 0 3px #999;
     overflow-y: scroll;
 
     &::-webkit-scrollbar{
