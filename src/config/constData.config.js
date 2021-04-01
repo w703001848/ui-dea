@@ -198,12 +198,11 @@ module.exports = {
     // backgroundColor: 'transparent'
   },
   componentData: [
-    {
-      name: '轮播图',
+    { // 轮播
+      name: '轮播',
       type: 'swiper',
       height: 150,
       width: undefined,
-      padding: '10px 15px',
       setting: {
         speed: 300,
         autoplay: {
@@ -211,15 +210,83 @@ module.exports = {
         },
         loop: true,
       },
-      banners: []
+      values: []
     },
-    {
-      name: '间隔',
-      type: 'warp',
+    { // 分割线
+      name: '分割线',
+      type: 'divider',
+      vertical: false,
+      color: '#0a82f3',
+      thickness: 1,
+      indent: 15,
+      endIndent: 15,
     },
-    {
+    { // 容器
+      name: '容器',
+      type: 'container',
+      width: undefined,
+      height: undefined,
+      flex: false,
+      padding: undefined,
+      margin: undefined,
+    },
+    { // 子容器
+      name: '子容器',
+      type: 'children',
+      width: undefined,
+      height: undefined,
+      flex: false,
+      padding: undefined,
+      margin: undefined,
+      position: undefined,
+    },
+    { // 卡片
       name: '卡片',
       type: 'card',
+      bgColor: undefined,
+      border: undefined,
+      borderRadius: undefined,
+      title: '卡片1',
+    },
+    { // 网格
+      name: '网格',
+      type: 'grid',
+    },
+    { // 列表
+      name: '列表',
+      type: 'list',
+    },
+    { // 滚动
+      name: '滚动',
+      type: 'scroll',
+    },
+    { // 头部导航
+      name: '头部导航',
+      type: 'bar',
+    },
+    { // 底部导航
+      name: '导航',
+      type: 'tab',
+    },
+    { // 文本
+      name: '文本',
+      type: 'text',
+    },
+    { // 按钮
+      name: '按钮',
+      type: 'button',
+    },
+    { // 输入框
+      name: '输入框',
+      type: 'button',
+    },
+    { // 单选按钮
+      name: '单选按钮',
+      type: 'radio',
+    },
+    { // 复选按钮
+      name: '复选按钮',
+      type: 'checkbox',
     },
   ],
   treeDefault: [

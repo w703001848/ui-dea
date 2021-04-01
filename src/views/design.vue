@@ -61,11 +61,16 @@
     </el-container>
 
     <el-aside>
-      <div v-if="current > -1">
-        属性
-        <div v-for="(item, key) of optionsData[current]" :key="key">
-          {{item}}-{{key}}
-        </div>
+      <div class="attr" v-if="current > -1">
+        <template v-for="(item, key) of componentAttr">
+          <span class="attr__name" v-if="key === 'id'" :key="key">{{item}}：</span>
+          <span class="attr__name" v-else-if="key === 'name'" :key="key">{{item}}</span>
+          <span class="attr__name" v-else-if="key === 'type'" :key="key">({{item}})</span>
+          <div class="attr__row" v-else :key="key">
+            <div class="attr__label">{{key}}</div>
+            <div class="attr__field">{{item}}</div>
+          </div>
+        </template>
       </div>
     </el-aside>
 
@@ -73,91 +78,96 @@
 </template>
 
 <script>
-import wlpStatusBar from '@/components/wlp-status-bar.vue';
-import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
-import pagePhone from '@/components/page-phone.vue';
+  import wlpStatusBar from '@/components/wlp-status-bar.vue';
+  import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
+  import pagePhone from '@/components/page-phone.vue';
 
-import { themeType, themeColor, statusBar, componentData, designDefault } from '@/config/constData.config.js';
-import { swiperTemp } from '@/config/components.temp.js';
+  import { themeType, themeColor, statusBar, componentData, designDefault } from '@/config/constData.config.js';
+  import { swiperTemp } from '@/config/components.temp.js';
 
-import { deepClone } from '@/common/util.js';
+  import { deepClone } from '@/common/util.js';
 
-export default {
-  name: 'Index',
-  components: {
-    wlpStatusBar,
-    wlpIcons,
-    pagePhone
-  },
-  data() {
-    return {
-      height: 300,
-      activeNames: ['component'], // 'type', 'color', 
-      themeTypeList: themeType,
-      themeColorList: themeColor,
-      colorKey: 'bg',
-      statusBar: statusBar, // 头部状态栏
-      navBar: false,        // 导航栏
-      optionsData: [],
-      componentData: componentData,
-      isBox: true,
-      current: -1,
-    }
-  },
-  created() {
-    this.id = 0;
-    this.height = document.documentElement.clientHeight - 64;
-    this.design = JSON.parse(this.$storage.get('designData')) || deepClone(designDefault);
-    // console.log(this.design, this.$store.state.designId)
-    this.optionsData = this.design[this.$store.state.designId];
-    this.optionsData.map(item => {
-      if(item.id > this.id) this.id = item.id;
-    });
-    // console.log(this.optionsData, this.id)
-  },
-  methods: {
-    handleType(item){
-      this.$store.commit('setThemeType', item);
+  export default {
+    name: 'Index',
+    components: {
+      wlpStatusBar,
+      wlpIcons,
+      pagePhone
     },
-    handleColor(item){
-      if(item.name === themeColor.name) return;
-      this.$store.commit('setThemeColor', item);
-    },
-    handleColorEdit(item, key){
-      if(item.name === 'custom'){
-        // console.log(this.$refs.colorPicker, item, key)
-        this.colorKey = key;
-        this.$refs.colorPicker.showPicker= true
+    data() {
+      return {
+        height: 300,
+        activeNames: ['component'], // 'type', 'color', 
+        themeTypeList: themeType,
+        themeColorList: themeColor,
+        colorKey: 'bg',
+        statusBar: statusBar, // 头部状态栏
+        navBar: false,        // 导航栏
+        optionsData: [],
+        componentData: componentData,
+        isBox: true,
+        current: -1,
       }
     },
-    handleColorChange(val){
-      this.themeColor[this.colorKey] = val;
-      this.$storage.set('customThemeColor-' + this.colorKey, val);
-      this.$store.commit('setThemeColor', this.themeColor);
-    },
-    handleComponent(e){
-      if(e.type === 'swiper'){
-        e.banners = swiperTemp;
+    computed: {
+      componentAttr(){
+        return this.optionsData[this.current];
       }
-      console.log(e)
-      this.id ++;
-      this.optionsData.push({
-        ...e,
-        id: this.id,
-      })
     },
-    handleBox(e){
-      this.current = e.index;
+    created() {
+      this.id = 0;
+      this.height = document.documentElement.clientHeight - 64;
+      this.design = JSON.parse(this.$storage.get('designData')) || deepClone(designDefault);
+      // console.log(this.design, this.$store.state.designId)
+      this.optionsData = this.design[this.$store.state.designId];
+      this.optionsData.map(item => {
+        if(item.id > this.id) this.id = item.id;
+      });
+      // console.log(this.optionsData, this.id)
     },
-    changePagePhone(e){
-      this.optionsData = e;
-    },
-    save(){
-      this.design[this.$store.state.designId] = this.optionsData;
-      this.$storage.set('designData', JSON.stringify(this.design));
+    methods: {
+      handleType(item){
+        this.$store.commit('setThemeType', item);
+      },
+      handleColor(item){
+        if(item.name === themeColor.name) return;
+        this.$store.commit('setThemeColor', item);
+      },
+      handleColorEdit(item, key){
+        if(item.name === 'custom'){
+          // console.log(this.$refs.colorPicker, item, key)
+          this.colorKey = key;
+          this.$refs.colorPicker.showPicker= true
+        }
+      },
+      handleColorChange(val){
+        this.themeColor[this.colorKey] = val;
+        this.$storage.set('customThemeColor-' + this.colorKey, val);
+        this.$store.commit('setThemeColor', this.themeColor);
+      },
+      handleComponent(e){
+        if(e.type === 'swiper'){
+          e.values = swiperTemp;
+        }
+        console.log(e)
+        this.id ++;
+        this.optionsData.push({
+          id: this.id,
+          ...e,
+        })
+      },
+      handleBox(e){
+        this.current = e.index;
+      },
+      changePagePhone(e){
+        this.optionsData = e;
+      },
+      save(){
+        this.design[this.$store.state.designId] = this.optionsData;
+        this.$storage.set('designData', JSON.stringify(this.design));
+      }
     }
   }
-}
 </script>
 
 <style lang="scss">
@@ -258,6 +268,32 @@ export default {
 
   .el-aside{
     min-width: 300px;
+
+    .attr{
+      padding: 0 5px 0 0;
+
+      &__name{
+        font-size: 22px;
+        font-weight: bold;
+        color: $color-primary;
+        border-bottom: 2px solid $color-primary;
+        line-height: 3;
+      }
+
+      &__row{
+        @include flex(between);
+        line-height: 1.8;
+      }
+
+      &__label{
+        flex: none;
+        width: 6em;
+      }
+
+      &__field{
+        flex: auto;
+      }
+    }
   }
 
   .el-main{

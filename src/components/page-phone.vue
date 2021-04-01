@@ -12,12 +12,12 @@
             </page-box>
             <wlp-swiper v-else :key="index" :options="item"></wlp-swiper>
           </template>
-          <!-- 占位 -->
-          <template v-else-if="item.type === 'wrap'">
+          <!-- 水平分割线 -->
+          <template v-else-if="item.type === 'divider'">
             <page-box v-if="isBox" :isChecked="index === current" :index="index" :key="index" @handleBox="handleBox" @handleRemove="handleRemove">
-              <div class="wrap" :style="'height:' + item.height + 'px'"></div>
+              <wlp-divider :color="item.color" :thickness="item.thickness" :indent="item.indent" :endIndent="item.endIndent"></wlp-divider>
             </page-box>
-            <div v-else :key="index" class="wrap" :style="'height:' + item.height + 'px'"></div>
+            <wlp-divider v-else :key="index" :color="item.color" :thickness="item.thickness" :indent="item.indent" :endIndent="item.endIndent"></wlp-divider>
           </template>
 
         </template>
@@ -32,6 +32,7 @@ import pageBox from '@/components/page-box.vue';
 import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
 import wlpNavBar from '@/components/wlp-nav-bar.vue';
 import wlpSwiper from '@/components/wlp-swiper.vue';
+import wlpDivider from '@/components/wlp-divider.vue';
 
 export default {
   name: 'PagePhone',
@@ -41,6 +42,7 @@ export default {
     wlpIcons,
     wlpNavBar,
     wlpSwiper,
+    wlpDivider,
   },
   props: {
     isBox: {
@@ -101,6 +103,10 @@ export default {
   @import '@/style/_base.scss';
   @import '@/style/core/_setting-phone.scss';
   @import '@/style/base2021.scss';
+
+  @import '@/style/theme/NEU.scss';
+  @import '@/style/theme/MD.scss';
+  @import '@/style/theme/FLAT.scss';
 
   .wrap{
     width: 100%;

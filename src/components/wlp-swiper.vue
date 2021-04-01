@@ -1,19 +1,16 @@
 <template>
-  <div class="swiper" :class="options.type" :style="{'width': options.width + 'px'}">
-    <swiper ref="mySwiper" 
-      :options="swiperOption" 
-      :style="{'height': options.height + 'px', '--swiper-theme-color': themeColor.text, '--swiper-navigation-size': options.navigation && options.navigation.size}">
-      <div v-if="swiperOption.navigation" class="swiper-button-prev" slot="button-prev"></div>
-      <swiper-slide v-for="(item, index) of options.banners" :key="index" :style="{'color': item.color, 'backgroundColor': item.bgColor}">
-        <img v-if="item.type === 'img'" :src="item.url">
-        <div v-else>{{item.title}}</div>
-      </swiper-slide>
-      <div v-if="swiperOption.navigation" class="swiper-button-next" slot="button-next"></div>
-      <div v-if="swiperOption.pagination" class="swiper-pagination" slot="pagination"></div>
-    </swiper>
-  </div>
+  <swiper ref="mySwiper" 
+    :options="swiperOption" 
+    :style="{'width': options.width + 'px', 'height': options.height + 'px', '--swiper-theme-color': themeColor.text, '--swiper-navigation-size': options.navigation && options.navigation.size}">
+    <div v-if="swiperOption.navigation" class="swiper-button-prev" slot="button-prev"></div>
+    <swiper-slide v-for="(item, index) of options.values" :key="index" :style="{'color': item.color, 'backgroundColor': item.bgColor}">
+      <img v-if="item.type === 'img'" :src="item.url">
+      <div v-else>{{item.title}}</div>
+    </swiper-slide>
+    <div v-if="swiperOption.navigation" class="swiper-button-next" slot="button-next"></div>
+    <div v-if="swiperOption.pagination" class="swiper-pagination" slot="pagination"></div>
+  </swiper>
 </template>
-
 
 <script>
   import { Swiper, SwiperSlide, directive } from 'vue-awesome-swiper';
@@ -21,6 +18,7 @@
   import 'swiper/css/swiper.css';
 
   export default {
+    name: 'wlpSwiper',
     components: {
       Swiper,
       SwiperSlide,
