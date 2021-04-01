@@ -39,6 +39,16 @@
             </div>
           </div>
         </el-collapse-item>
+        <el-collapse-item title="模块 module" name="module">
+          <div class="grid">
+            <div class="grid__item styleType">
+              <div class="styleType__icon">
+                <wlp-icons type="listing-content" color="#ccc" size="32"></wlp-icons>
+              </div>
+              <span class="styleType__name">xxx</span>
+            </div>
+          </div>
+        </el-collapse-item>
       </el-collapse>
     </el-aside>
 
