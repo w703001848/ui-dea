@@ -1,53 +1,27 @@
 <template>
   <div class="page" :class="themeType">
     <!-- 导航栏 -->
-    <wlp-nav-bar v-if="navBar" :statusBar="statusBar"></wlp-nav-bar>
-    <draggable v-model="list" @end="onEnd">
-      <transition-group class="drop-wrapper">
-        <template v-for="(item, index) of list">
-          <!-- 轮播图 -->
-          <template v-if="item.type === 'swiper'">
-            <page-box v-if="isBox" :isChecked="index === current" :index="index" :key="index" @handleBox="handleBox" @handleRemove="handleRemove">
-              <wlp-swiper :options="item"></wlp-swiper>
-            </page-box>
-            <wlp-swiper v-else :key="index" :options="item"></wlp-swiper>
-          </template>
-          <!-- 水平分割线 -->
-          <template v-else-if="item.type === 'divider'">
-            <page-box v-if="isBox" :isChecked="index === current" :index="index" :key="index" @handleBox="handleBox" @handleRemove="handleRemove">
-              <wlp-divider :color="item.color" :thickness="item.thickness" :indent="item.indent" :endIndent="item.endIndent"></wlp-divider>
-            </page-box>
-            <wlp-divider v-else :key="index" :color="item.color" :thickness="item.thickness" :indent="item.indent" :endIndent="item.endIndent"></wlp-divider>
-          </template>
-
-        </template>
-      </transition-group>
-   </draggable>
+    <wlp-nav-bar v-if="isNavBar" :statusBar="statusBar"></wlp-nav-bar>
+    <wlp-container :isBox="isBox" :options="page"></wlp-container>
   </div>
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import pageBox from '@/components/page-box.vue';
-import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
 import wlpNavBar from '@/components/wlp-nav-bar.vue';
-import wlpSwiper from '@/components/wlp-swiper.vue';
-import wlpDivider from '@/components/wlp-divider.vue';
+import wlpContainer from '@/components/wlp-container.vue';
 
 export default {
   name: 'PagePhone',
   components: {
-    draggable,
-    pageBox,
-    wlpIcons,
     wlpNavBar,
-    wlpSwiper,
-    wlpDivider,
+    wlpContainer,
   },
   props: {
-    isBox: {
-      type: Boolean,
-      default: false
+    isNavBar: {
+      type: [Object, Boolean],
+      default () {
+          return false
+      }
     },
     statusBar: {
       type: [Object, Boolean],
@@ -55,45 +29,33 @@ export default {
           return false
       }
     },
-    navBar: {
-      type: [Object, Boolean],
-      default () {
-          return false
-      }
+    isBox: {
+      type: Boolean,
+      default: false
     },
     options: {
-      type: Array,
+      type: Object,
       default () {
-          return []
+        return {
+          style: null,
+          children: []
+        }
       }
     }
   },
   watch: {
     options(newVal, oldVal){
-      this.list = newVal;
+      this.page = newVal;
     }
   },
   data() {
     return {
-      list: [],
-      current: null,
+      page: {},
     }
   },
-  created() {
-    this.list = this.options;
-  },
   methods: {
-    handleBox(index){
-      this.current = index;
-      this.$emit('click', {index});
-    },
-    handleRemove(index){
-      this.current = null;
-      this.list.splice(index, 1);
-      this.onEnd();
-    },
     onEnd() {
-      this.$emit('change', this.list);
+      this.$emit('change', this.page);
     },
   },
 }

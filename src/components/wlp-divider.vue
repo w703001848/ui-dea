@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: 'wlpDivider',
+    name: 'WlpDivider',
     props: {
       vertical: {
         type: Boolean,

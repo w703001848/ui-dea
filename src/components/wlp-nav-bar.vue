@@ -1,12 +1,12 @@
 <template>
-  <nav class="status-bar" :class="{'status-bar--white': options.textStyle === 'white','status-bar--black': options.textStyle === 'black'}" :style="'backgroundColor:' + options.backgroundColor">
-    123.33
+  <nav class="nav-bar" :class="{'nav-bar--white': options.textStyle === 'white','nav-bar--black': options.textStyle === 'black'}" :style="'backgroundColor:' + options.backgroundColor">
   </nav>
 </template>
 
 
 <script>
 export default {
+  name: 'WlpNavBar',
   props: {
     options: {
       type: Object,
@@ -20,7 +20,7 @@ export default {
 <style lang="scss">
   @import '@/style/_base.scss';
 
-  .status-bar{
+  .nav-bar{
     @include position-header();
 
     &--black{
@@ -34,7 +34,7 @@ export default {
     }
   }
 
-  .status-bar{
+  .nav-bar{
     width: 100%;
     height: 22px;
   }

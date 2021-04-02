@@ -1,26 +1,24 @@
-import storage from '../storage'
-
-const themeColor = storage.get('themeColor');
+import store from '../store';
 
 const swiperTemp = [
   {
     type: 'text',
     title: 'Slide 1',
     note: 'xxxxxxxxxxxxxxxxxxxxxxx',
-    color: themeColor.bg,
-    bgColor: themeColor.primary,
+    color: store.getters.themeColor.bg,
+    bgColor: store.getters.themeColor.primary,
   },{
     type: 'text',
     title: 'Slide 2',
     note: 'xxxxxxxxxxxxxxxxxxxxxxx',
-    color: themeColor.bg,
-    bgColor: themeColor.text,
+    color: store.getters.themeColor.bg,
+    bgColor: store.getters.themeColor.text,
   },{
     type: 'text',
     title: 'Slide 3',
     note: 'xxxxxxxxxxxxxxxxxxxxxxx',
-    color: themeColor.bg,
-    bgColor: themeColor.grey,
+    color: store.getters.themeColor.bg,
+    bgColor: store.getters.themeColor.grey,
   }
 ];
 

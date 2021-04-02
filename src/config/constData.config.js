@@ -221,24 +221,39 @@ module.exports = {
       indent: 15,
       endIndent: 15,
     },
+    { // 图标
+      name: '图标',
+      type: 'icon',
+      color: '#0a82f3',
+      size: 16,
+      fontType: 'xinhao'
+    },
     { // 容器
       name: '容器',
       type: 'container',
-      width: undefined,
-      height: undefined,
-      flex: false,
-      padding: undefined,
-      margin: undefined,
+      style: {
+        width: undefined,
+        height: undefined,
+        flex: false,
+        padding: undefined,
+        margin: undefined,
+        bgColor: undefined,
+      },
+      children: []
     },
     { // 子容器
       name: '子容器',
       type: 'children',
-      width: undefined,
-      height: undefined,
-      flex: false,
-      padding: undefined,
-      margin: undefined,
-      position: undefined,
+      style: {
+        width: undefined,
+        height: undefined,
+        flex: false,
+        padding: undefined,
+        margin: undefined,
+        position: undefined,
+        bgColor: undefined,
+      },
+      children: []
     },
     { // 卡片
       name: '卡片',
@@ -297,6 +312,9 @@ module.exports = {
     },
   ],
   designDefault: {
-    "1": [],
+    "1": {
+      "style": {},
+      "children": [],
+    }
   }
 };

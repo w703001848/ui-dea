@@ -18,7 +18,7 @@
   import 'swiper/css/swiper.css';
 
   export default {
-    name: 'wlpSwiper',
+    name: 'WlpSwiper',
     components: {
       Swiper,
       SwiperSlide,

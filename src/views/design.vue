@@ -54,10 +54,10 @@
 
     <el-container>
       <el-main>
-        <div class="app" :class="{'app--status-bar': !navBar && statusBar}">
+        <div class="app" :class="{'app--status-bar': !isNavBar && statusBar}">
           <!-- 系统栏 -->
-          <wlp-status-bar v-if="!navBar && statusBar" :options="statusBar"></wlp-status-bar>
-          <page-phone :statusBar="statusBar" :navBar="navBar" :options="optionsData" :isBox="isBox" @change="changePagePhone" @click="handleBox"/>
+          <wlp-status-bar v-if="!isNavBar && statusBar" :options="statusBar"></wlp-status-bar>
+          <!-- <page-phone :isNavBar="isNavBar" :statusBar="statusBar" :options="optionsData" :isBox="isBox" @change="changePagePhone" @click="handleBox"/> -->
         </div>
       </el-main>
       
@@ -98,7 +98,7 @@
   import { deepClone } from '@/common/util.js';
 
   export default {
-    name: 'Index',
+    name: 'Design',
     components: {
       wlpStatusBar,
       wlpIcons,
@@ -112,7 +112,7 @@
         themeColorList: themeColor,
         colorKey: 'bg',
         statusBar: statusBar, // 头部状态栏
-        navBar: false,        // 导航栏
+        isNavBar: false,        // 导航栏
         optionsData: [],
         componentData: componentData,
         isBox: true,
@@ -130,7 +130,7 @@
       this.design = JSON.parse(this.$storage.get('designData')) || deepClone(designDefault);
       // console.log(this.design, this.$store.state.designId)
       this.optionsData = this.design[this.$store.state.designId];
-      this.optionsData.map(item => {
+      this.optionsData.children.map(item => {
         if(item.id > this.id) this.id = item.id;
       });
       // console.log(this.optionsData, this.id)

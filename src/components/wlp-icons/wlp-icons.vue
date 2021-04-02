@@ -7,7 +7,7 @@
 	import icons from './icons.js';
 
 	export default {
-		name: 'wlpIcons',
+		name: 'WlpIcons',
 		props: {
 			type: {
 				type: String,

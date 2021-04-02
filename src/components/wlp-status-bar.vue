@@ -18,6 +18,7 @@
 <script>
 import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
 export default {
+  name: 'WlpStatusBar',
   components: {
     wlpIcons
   },

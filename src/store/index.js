@@ -20,7 +20,7 @@ export default new Vuex.Store({
 		themeColor: state => {
 			let theme = state.themeColor;
 			if (!theme) {
-				theme = themeColor.filter((item) => item.name === ($mSettingConfig.styleCole))[0];
+				theme = themeColor.filter((item) => item.name === $mSettingConfig['styleColor'])[0];
 			}
 			return theme;
 		},
@@ -28,7 +28,7 @@ export default new Vuex.Store({
 		themeType: state => {
 			let theme = state.themeType;
 			if (!theme) {
-				theme = themeType.filter((item) => item === ($mSettingConfig.styleType))[0];
+				theme = themeType.filter((item) => item === $mSettingConfig['styleType'])[0];
 			}
 			return theme;
 		},
