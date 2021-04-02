@@ -2,14 +2,14 @@
   <el-container :style="'height:' + height + 'px'">
     <el-aside width="38vw" style="min-height: 300px;">
       <el-collapse v-model="activeNames">
-        <el-collapse-item :title="`风格 STYLE（ ${themeType} ）`" name="type">
+        <!-- <el-collapse-item :title="`风格 STYLE（ ${themeType} ）`" name="type">
           <div class="grid">
             <div class="grid__item styleType" :class="item" v-for="(item, index) of themeTypeList" :key="index" @click="handleType(item)">
               <div class="styleType__card" :class="item + '__main'">UIdea</div>
               <span class="styleType__name">{{item}}</span>
             </div>
           </div>
-        </el-collapse-item>
+        </el-collapse-item> -->
         <el-collapse-item :title="`配色 COLOR（ ${themeColor.name} ）`" name="color">
           <div class="grid">
             <div class="grid__item styleColor" v-for="(item, index) of themeColorList" :key="index" @click="handleColor(item)">
@@ -45,7 +45,7 @@
               <div class="styleType__icon">
                 <wlp-icons type="listing-content" color="#ccc" size="32"></wlp-icons>
               </div>
-              <span class="styleType__name">xxx</span>
+              <span class="styleType__name">page</span>
             </div>
           </div>
         </el-collapse-item>
@@ -57,7 +57,11 @@
         <div class="app" :class="{'app--status-bar': !isNavBar && statusBar}">
           <!-- 系统栏 -->
           <wlp-status-bar v-if="!isNavBar && statusBar" :options="statusBar"></wlp-status-bar>
-          <!-- <page-phone :isNavBar="isNavBar" :statusBar="statusBar" :options="optionsData" :isBox="isBox" @change="changePagePhone" @click="handleBox"/> -->
+          <div class="page" :class="themeType">
+            <!-- 导航栏 -->
+            <wlp-nav-bar v-if="isNavBar" :statusBar="statusBar"></wlp-nav-bar>
+            <wlp-container :isBox="isBox" :options="optionsData" @change="changePagePhone" @click="handleBox"></wlp-container>
+          </div>
         </div>
       </el-main>
       
@@ -81,6 +85,8 @@
             <div class="attr__field">{{item}}</div>
           </div>
         </template>
+        <button v-if="componentAttr.type === 'container'">修改</button>
+        <button @click="handleRemove">删除</button>
       </div>
     </el-aside>
 
@@ -88,9 +94,9 @@
 </template>
 
 <script>
-  import wlpStatusBar from '@/components/wlp-status-bar.vue';
   import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
-  import pagePhone from '@/components/page-phone.vue';
+  import wlpStatusBar from '@/components/wlp-status-bar.vue';
+  import wlpContainer from '@/components/wlp-container.vue';
 
   import { themeType, themeColor, statusBar, componentData, designDefault } from '@/config/constData.config.js';
   import { swiperTemp } from '@/config/components.temp.js';
@@ -100,9 +106,9 @@
   export default {
     name: 'Design',
     components: {
-      wlpStatusBar,
       wlpIcons,
-      pagePhone
+      wlpStatusBar,
+      wlpContainer,
     },
     data() {
       return {
@@ -121,7 +127,7 @@
     },
     computed: {
       componentAttr(){
-        return this.optionsData[this.current];
+        return this.optionsData.children[this.current];
       }
     },
     created() {
@@ -161,13 +167,18 @@
         }
         console.log(e)
         this.id ++;
-        this.optionsData.push({
+        this.optionsData.children.push({
           id: this.id,
           ...e,
         })
       },
       handleBox(e){
         this.current = e.index;
+      },
+      handleRemove(){
+        let index = this.current;
+        this.current = null;
+        this.optionsData.children.splice(index, 1);
       },
       changePagePhone(e){
         this.optionsData = e;

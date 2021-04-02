@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :style="resStyle">
+  <div class="container" :style="{'height': style.height + 'px', 'width': style.width + 'px', 'padding': style.padding, 'margin': style.margin, 'backgroundColor': style.bgColor}">
     <draggable v-model="list" @end="onEnd">
       <transition-group class="drop-wrapper">
         <template v-for="(item, index) of list">
@@ -44,7 +44,6 @@ import pageBox from '@/components/page-box.vue';
 import wlpSwiper from '@/components/wlp-swiper.vue';
 import wlpDivider from '@/components/wlp-divider.vue';
 import wlpIcons from '@/components/wlp-icons/wlp-icons.vue';
-import wlpContainer from '@/components/wlp-container.vue';
 
 export default{
   name: 'WlpContainer',
@@ -54,31 +53,36 @@ export default{
     wlpSwiper,
     wlpDivider,
     wlpIcons,
-    wlpContainer,
   },
   props: {
     options: {
       type: Object,
       default () {
-        return {
-          style: null,
-          children: []
-        }
+        return {}
       }
-    }
-  },
-  computed: {
-    resStyle(){
-      return `height: 100px;`
-    }
+    },
+    children: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    isBox: {
+      type: Boolean,
+      default: false
+    },
   },
   watch: {
     options(newVal, oldVal){
-      this.list = newVal.children;
+      this.style = newVal;
+    },
+    children(newVal, oldVal){
+      this.list = newVal;
     }
   },
   data() {
     return {
+      style: [],
       list: [],
       current: null,
     }
@@ -107,6 +111,6 @@ export default{
 
 <style lang="scss">
   .container{
-    height: 100px;
+    position: relative;
   }
 </style>
