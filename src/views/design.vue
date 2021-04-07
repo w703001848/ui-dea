@@ -54,13 +54,13 @@
 
     <el-container>
       <el-main>
-        <div class="app" :class="{'app--status-bar': !isNavBar && statusBar}">
+        <div class="app" :class="{'app--status-bar': !isNavBar && statusBar}" @click="handleBox">
           <!-- 系统栏 -->
           <wlp-status-bar v-if="!isNavBar && statusBar" :options="statusBar"></wlp-status-bar>
-          <div class="page" :class="themeType">
+          <div class="page" :class="themeType" @click.stop="">
             <!-- 导航栏 -->
             <wlp-nav-bar v-if="isNavBar" :statusBar="statusBar"></wlp-nav-bar>
-            <wlp-container :isBox="isBox" :options="optionsData" @change="changePagePhone" @click="handleBox"></wlp-container>
+            <wlp-container :isEdit="false" :isDraggable="isDraggable" :children="optionsData.children" :options="optionsData.style" @change="changePagePhone" @clickItem="handleItem" @dblclick="dblHandleBox"></wlp-container>
           </div>
         </div>
       </el-main>
@@ -68,7 +68,6 @@
       <el-footer>
         <el-row :gutter="20">
           <el-col :span="4"><el-button size="mini" type="text" @click="save()">保存页面</el-button></el-col>
-          <el-col :span="8"><el-checkbox v-model="isBox">是否显示组件框</el-checkbox></el-col>
           
         </el-row>
       </el-footer>
@@ -85,7 +84,8 @@
             <div class="attr__field">{{item}}</div>
           </div>
         </template>
-        <button v-if="componentAttr.type === 'container'">修改</button>
+        <button v-if="componentAttr.type === 'container' && !isDraggable" @click="dblHandleBox({index: current})">修改</button>
+        <button v-if="componentAttr.type === 'container' && isDraggable" @click="cancelHandleBox()">关闭容器</button>
         <button @click="handleRemove">删除</button>
       </div>
     </el-aside>
@@ -119,15 +119,23 @@
         colorKey: 'bg',
         statusBar: statusBar, // 头部状态栏
         isNavBar: false,        // 导航栏
-        optionsData: [],
+        optionsData: {        // 查看中页面数据
+          children: [],
+          style: undefined
+        },
         componentData: componentData,
-        isBox: true,
+        isDraggable: false,
         current: -1,
+        currentChildren: undefined,
       }
     },
     computed: {
       componentAttr(){
-        return this.optionsData.children[this.current];
+        if(this.currentChildren){
+          return this.currentChildren;
+        }else{
+          return this.optionsData.children[this.current];
+        }
       }
     },
     created() {
@@ -135,20 +143,23 @@
       this.height = document.documentElement.clientHeight - 64;
       this.design = JSON.parse(this.$storage.get('designData')) || deepClone(designDefault);
       // console.log(this.design, this.$store.state.designId)
-      this.optionsData = this.design[this.$store.state.designId];
+      this.optionsData = this.design[this.$store.state.designId] || deepClone(designDefault)[1];
       this.optionsData.children.map(item => {
         if(item.id > this.id) this.id = item.id;
       });
       // console.log(this.optionsData, this.id)
     },
     methods: {
+      // 修改主题风格
       handleType(item){
         this.$store.commit('setThemeType', item);
       },
+      // 修改主题配色
       handleColor(item){
         if(item.name === themeColor.name) return;
         this.$store.commit('setThemeColor', item);
       },
+      // 修改自定义配色
       handleColorEdit(item, key){
         if(item.name === 'custom'){
           // console.log(this.$refs.colorPicker, item, key)
@@ -156,34 +167,104 @@
           this.$refs.colorPicker.showPicker= true
         }
       },
+      // 调色板变化
       handleColorChange(val){
         this.themeColor[this.colorKey] = val;
         this.$storage.set('customThemeColor-' + this.colorKey, val);
         this.$store.commit('setThemeColor', this.themeColor);
       },
+      // 新增组件
       handleComponent(e){
-        if(e.type === 'swiper'){
+        if(e.type === 'swiper'){ // swiper 默认轮播数据添加
           e.values = swiperTemp;
         }
         console.log(e)
         this.id ++;
-        this.optionsData.children.push({
-          id: this.id,
-          ...e,
-        })
+        if(this.isEdit){
+          this.optionsData.children[this.current].children.push({
+            id: this.id,
+            ...e,
+          });
+        }else{
+          this.optionsData.children.push({
+            id: this.id,
+            ...e,
+          });
+          // 属性面板定位当前新增组件
+          this.current = this.optionsData.children.length - 1;
+        }
       },
-      handleBox(e){
-        this.current = e.index;
+      // 修改页面
+      handleBox(){
+        this.cancelHandleBox();
+        console.log('page');
+        this.current = -1;
       },
+      // 修改容器
+      dblHandleBox(e){
+        // console.log('dblHandleBox',e.index, this.optionsData.children[e.index]);
+        this.isDraggable = true;
+        this.optionsData.children[e.index].isEdit = true;
+        this.optionsData.children[e.index].isDraggable = false;
+      },
+      // 关闭容器修改
+      cancelHandleBox(){
+        if(this.isDraggable){
+          this.isDraggable = false;
+          this.currentChildren = undefined;
+          this.optionsData.children[this.current].isEdit = false;
+          this.optionsData.children[this.current].isDraggable = true;
+        }
+      },
+      // 选中组件
+      handleItem(e){
+        if(this.isDraggable && e.type == 'container'){
+          this.searchChildren(this.optionsData.children[this.current].children, e.id);
+        }else if(!this.isDraggable){
+          this.current = e.index;
+        }else{
+          this.cancelHandleBox();
+          this.current = e.index;
+        }
+      },
+      searchChildren(obj, id, type = 'edit'){
+        obj.some((n,index) => {
+          if(n.hasOwnProperty('children')){
+            this.searchChildren(n.children, id);
+            return false;
+          }else{
+            if(n.id === id){
+              if(type === 'edit'){
+                this.currentChildren = n;
+              }else{
+                this.currentChildren = undefined;
+                obj.splice(index, 1);
+              }
+              return true;
+            }else{
+              return false;
+            }
+          }
+        });
+      },
+      // 删除组件
       handleRemove(){
-        let index = this.current;
-        this.current = null;
-        this.optionsData.children.splice(index, 1);
+        if(this.isDraggable){
+          this.searchChildren(this.optionsData.children[this.current].children, this.currentChildren.id, 'remove');
+        }else{
+          this.cancelHandleBox();
+          let index = this.current;
+          this.current = -1;
+          this.optionsData.children.splice(index, 1);
+        }
       },
+      // 更新当前页数据
       changePagePhone(e){
         this.optionsData = e;
       },
+      // 保存当前页面数据
       save(){
+        this.cancelHandleBox();
         this.design[this.$store.state.designId] = this.optionsData;
         this.$storage.set('designData', JSON.stringify(this.design));
       }

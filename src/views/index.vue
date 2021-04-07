@@ -24,7 +24,7 @@
           <div class="page" :class="themeType">
             <!-- 导航栏 -->
             <wlp-nav-bar v-if="isNavBar" :statusBar="statusBar"></wlp-nav-bar>
-            <wlp-container :options="optionsData.style" :children="optionsData.children" @click="handleBox" @dblclick="containerDblclick"></wlp-container>
+            <wlp-container :isDraggable="true" :children="optionsData.children" :options="optionsData.style"></wlp-container>
           </div>
         </div>
       </el-main>
@@ -59,9 +59,12 @@
     data() {
       return {
         statusBar: statusBar, // 头部状态栏
-        isNavBar: false,        // 导航栏
+        isNavBar: false,      // 导航栏
         treeData: [],         // 项目文件数据
-        optionsData: [],      // 查看中页面数据
+        optionsData: {        // 查看中页面数据
+          children: [],
+          style: undefined
+        },
         treePage: null,       // 查看中页面
       }
     },
@@ -69,6 +72,7 @@
       this.initProject('init');
     },
     methods: {
+      // 新增页面
       append(data) {
         var name = prompt("标题：");  
         console.log(name, this.id);
@@ -82,12 +86,14 @@
           this.design[this.id] = deepClone(designDefault[1]);
         }
       },
+      // 打开页面
       open(node, data) {
         this.optionsData = this.design[data.id];
         this.treePage = data;
         console.log(node, data, this.optionsData);
         this.$store.commit('setDesignId', data.id);
       },
+      // 移除页面
       remove(node, data) {
         const parent = node.parent;
         const children = parent.data.children || parent.data;
@@ -95,6 +101,7 @@
         children.splice(index, 1);
         delete this.design[data.id];
       },
+      // 文件树添加按钮
       renderContent(h, { node, data, store }) {
         return (
           <span class="custom-tree-node">
@@ -106,12 +113,7 @@
             </span>
           </span>);
       },
-      handleBox(e){
-        console.log(e);
-      },
-      containerDblclick(e){
-
-      },
+      // 查询最小ID
       findId(arr, pageId){
         arr.map(n => {
           this.id = this.id > n.id ? this.id : n.id;
@@ -119,6 +121,7 @@
           if(n.children.length) this.findId(n.children, pageId);
         });
       },
+      // 初始化
       initProject(type = 'init'){
         if(type === 'init'){
           let pageId = this.$store.state.designId;
@@ -127,21 +130,26 @@
           this.optionsData = this.design[pageId];
           this.findId(this.treeData, pageId);
         }else{
-          this.treeData = deepClone(treeDefault),
+          this.treeData = deepClone(treeDefault);
           this.design = deepClone(designDefault);
           this.optionsData = this.design[1];
           this.id = 1;
           this.treePage = this.treeData[0];
         }
-        // console.log(this.treeData, this.design, this.id, this.optionsData);
+        console.log(this.treeData, this.design, this.id, this.optionsData);
       },
+      // 重置项目
       newProject(){
         if(confirm("警告：未保存前可刷新页面获取旧数据！")){
           this.initProject();
         }
       },
+      // 保存项目
       saveProject(){
         console.log(this.treeData, this.design);
+        if(!this.treeData.length){
+          this.initProject();
+        }
         this.$storage.set('treeData', JSON.stringify(this.treeData));
         this.$storage.set('designData', JSON.stringify(this.design));
       }

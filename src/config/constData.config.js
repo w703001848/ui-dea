@@ -233,13 +233,15 @@ module.exports = {
       type: 'container',
       style: {
         width: undefined,
-        height: undefined,
+        height: 100,
         flex: false,
         padding: undefined,
         margin: undefined,
         bgColor: undefined,
       },
-      children: []
+      children: [],
+      isDraggable: true,
+      isEdit: false,
     },
     { // 子容器
       name: '子容器',
